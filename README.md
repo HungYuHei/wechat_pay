@@ -2,6 +2,10 @@
 
 Wechat Pay: https://open.weixin.qq.com
 
+It contains:
+
+* generate access_token
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -18,7 +22,21 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Config
+
+```ruby
+WechatPay.app_id = 'YOUR_APP_ID'
+WechatPay.app_secret = 'YOUR_APP_SECRET'
+
+```
+
+### Access Token
+
+```ruby
+WechatPay::AccessToken.generate # => { "access_token" => ACCESS_TOKEN, "expires_in" => 7200 }
+```
+
+Your should cache the access_token, see http://mp.weixin.qq.com/wiki/index.php?title=%E8%8E%B7%E5%8F%96access_token
 
 ## Contributing
 
