@@ -2,7 +2,6 @@ require 'uri'
 require 'json'
 require 'rest_client'
 require 'digest/md5'
-require 'digest/sha1'
 
 module WechatPay
   module App
@@ -78,8 +77,7 @@ module WechatPay
         appkey: WechatPay.pay_sign_key
       }.merge(signature_params)
 
-      str = signature_params.sort.map { |item| item.join('=') }.join('&')
-      Digest::SHA1.hexdigest(str)
+      Sign.generate(params)
     end
   end
 end

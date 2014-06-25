@@ -1,6 +1,7 @@
 require 'wechat_pay/version'
 require 'wechat_pay/access_token'
 require 'wechat_pay/app'
+require 'wechat_pay/sign'
 
 module WechatPay
   class << self
