@@ -5,3 +5,6 @@ require 'fakeweb'
 
 WechatPay.app_id = 'app_id'
 WechatPay.app_secret = 'app_secret'
+WechatPay.pay_sign_key = 'pay_sign_key'
+WechatPay.partner_id = 'partner_id'
+WechatPay.partner_key = 'partner_key'
