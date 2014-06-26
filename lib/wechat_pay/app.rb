@@ -7,12 +7,11 @@ require 'securerandom'
 module WechatPay
   module App
 
-    # prepay_params:
-    #   traceid, body, out_trade_no, total_fee, notify_url, spbill_create_ip
-    def self.payment(access_token, prepay_params)
+    # TODO should we check the required params?
+    def self.payment(access_token, params)
       noncestr = SecureRandom.hex(16)
       timestamp = Time.now.to_i.to_s
-      prepay_id = generate_prepay_id(access_token, prepay_params)
+      prepay_id = generate_prepay_id(access_token, params)
 
       params = {
         appid:     WechatPay.app_id,
@@ -30,40 +29,32 @@ module WechatPay
 
     private
 
-    # :traceid, :noncestr, :timestamp
-    # :body, :out_trade_no, :total_fee, :notify_url, :spbill_create_ip for package
-    # :traceid, :noncestr, :timestamp for app_signature
-    def self.generate_prepay_id(access_token, prepay_params)
-      package = generate_package(
-        body:             prepay_params.delete(:body),
-        out_trade_no:     prepay_params.delete(:out_trade_no),
-        total_fee:        prepay_params.delete(:total_fee),
-        notify_url:       prepay_params.delete(:notify_url),
-        spbill_create_ip: prepay_params.delete(:spbill_create_ip)
-      )
+    PREPAY_PARAMS = [
+      :appid, :traceid, :noncestr, :package, :timestamp, :app_signature, :sign_method
+    ]
 
-      app_signature = generate_app_signature(
-        traceid:   prepay_params[:traceid],
-        noncestr:  prepay_params[:noncestr],
-        timestamp: prepay_params[:timestamp],
-        package:   package
-      )
-
+    def self.generate_prepay_id(access_token, params)
       url = "https://api.weixin.qq.com/pay/genprepay?access_token=#{access_token}"
 
       params = {
         appid:         WechatPay.app_id,
-        package:       package,
-        app_signature: app_signature,
+        package:       generate_package(params),
+        app_signature: generate_app_signature(params),
         sign_method:   'sha1'
-      }.merge(prepay_params)
+      }.merge(params)
+      params = Utils.slice_hash(params, *PREPAY_PARAMS)
 
       RestClient.post(url, params) do |response|
         JSON.parse(response.body)["prepayid"]
       end
     end
 
-    # :body, :out_trade_no, :total_fee, :notify_url, :spbill_create_ip
+    PACKAGE_PARAMS = [
+      :bank_type, :body, :attach, :partner, :out_trade_no, :total_fee, :fee_type,
+      :notify_url, :spbill_create_ip, :time_start, :time_expire, :transport_fee,
+      :product_fee, :goods_tag, :input_charset
+    ]
+
     def self.generate_package(package_params)
       params = {
         bank_type: 'WX',
@@ -77,6 +68,7 @@ module WechatPay
         input_charset: 'UTF-8'
       }.merge(package_params)
 
+      params = Utils.slice_hash(params, *PACKAGE_PARAMS)
       sorted_params = params.sort
 
       str = sorted_params.map do |item|
@@ -92,14 +84,17 @@ module WechatPay
       "#{escaped_params_str}&sign=#{sign}"
     end
 
-    # :noncestr, :package, :timestamp, :traceid
+    APP_SIGNATURE_PARAMS = [
+      :appid, :appkey, :noncestr, :package, :timestamp, :traceid
+    ]
+
     def self.generate_app_signature(signature_params)
       params = {
         appid: WechatPay.app_id,
         appkey: WechatPay.pay_sign_key
       }.merge(signature_params)
 
-      Sign.generate(params)
+      Sign.generate(Utils.slice_hash(params, *APP_SIGNATURE_PARAMS))
     end
   end
 end
