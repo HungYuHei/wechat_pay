@@ -2,26 +2,50 @@ require 'uri'
 require 'json'
 require 'rest_client'
 require 'digest/md5'
+require 'securerandom'
 
 module WechatPay
   module App
 
+    # prepay_params:
+    #   traceid, body, out_trade_no, total_fee, notify_url, spbill_create_ip
+    def self.payment(access_token, prepay_params)
+      noncestr = SecureRandom.hex(16)
+      timestamp = Time.now.to_i.to_s
+      prepay_id = generate_prepay_id(access_token, prepay_params)
+
+      params = {
+        appid:     WechatPay.app_id,
+        noncestr:  noncestr,
+        package:   'Sign=WXpay',
+        partnerid: WechatPay.partner_id,
+        prepayid:  prepay_id,
+        timestamp: timestamp
+      }
+
+      sign = Sign.generate(params)
+
+      params.merge(sign: sign)
+    end
+
+    private
+
     # :traceid, :noncestr, :timestamp
     # :body, :out_trade_no, :total_fee, :notify_url, :spbill_create_ip for package
     # :traceid, :noncestr, :timestamp for app_signature
-    def self.prepay_id(access_token, prepay_id_params)
+    def self.generate_prepay_id(access_token, prepay_params)
       package = generate_package(
-        body:             prepay_id_params.delete(:body),
-        out_trade_no:     prepay_id_params.delete(:out_trade_no),
-        total_fee:        prepay_id_params.delete(:total_fee),
-        notify_url:       prepay_id_params.delete(:notify_url),
-        spbill_create_ip: prepay_id_params.delete(:spbill_create_ip)
+        body:             prepay_params.delete(:body),
+        out_trade_no:     prepay_params.delete(:out_trade_no),
+        total_fee:        prepay_params.delete(:total_fee),
+        notify_url:       prepay_params.delete(:notify_url),
+        spbill_create_ip: prepay_params.delete(:spbill_create_ip)
       )
 
       app_signature = generate_app_signature(
-        traceid:   prepay_id_params[:traceid],
-        noncestr:  prepay_id_params[:noncestr],
-        timestamp: prepay_id_params[:timestamp],
+        traceid:   prepay_params[:traceid],
+        noncestr:  prepay_params[:noncestr],
+        timestamp: prepay_params[:timestamp],
         package:   package
       )
 
@@ -32,30 +56,12 @@ module WechatPay
         package:       package,
         app_signature: app_signature,
         sign_method:   'sha1'
-      }.merge(prepay_id_params)
+      }.merge(prepay_params)
 
       RestClient.post(url, params) do |response|
         JSON.parse(response.body)["prepayid"]
       end
     end
-
-    # :noncestr, :timestamp
-    def self.payment(prepay_id, payment_params)
-      params = {
-        appid:     WechatPay.app_id,
-        noncestr:  payment_params[:noncestr],
-        package:   "Sign=WXpay",
-        partnerid: WechatPay.partner_id,
-        prepayid:  prepay_id,
-        timestamp: payment_params[:timestamp]
-      }
-
-      sign = Sign.generate(params)
-
-      params.merge(sign: sign)
-    end
-
-    private
 
     # :body, :out_trade_no, :total_fee, :notify_url, :spbill_create_ip
     def self.generate_package(package_params)
