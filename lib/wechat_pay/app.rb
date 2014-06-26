@@ -1,7 +1,6 @@
 require 'uri'
 require 'json'
 require 'rest_client'
-require 'digest/md5'
 require 'securerandom'
 
 module WechatPay
@@ -56,7 +55,7 @@ module WechatPay
     ]
 
     def self.generate_package(package_params)
-      params = {
+      package_params = {
         bank_type: 'WX',
         body: package_params[:body],
         partner: WechatPay.partner_id,
@@ -68,20 +67,13 @@ module WechatPay
         input_charset: 'UTF-8'
       }.merge(package_params)
 
-      params = Utils.slice_hash(params, *PACKAGE_PARAMS)
-      sorted_params = params.sort
+      package_params = Utils.slice_hash(package_params, *PACKAGE_PARAMS)
 
-      str = sorted_params.map do |item|
-        item.join('=')
-      end.join('&') << "&key=#{WechatPay.partner_key}"
-
-      sign = Digest::MD5.hexdigest(str).upcase
-
-      escaped_params_str = sorted_params.map do |key, value|
+      escaped_params_str = package_params.sort.map do |key, value|
         "#{key}=#{URI.escape(value)}"
       end.join('&')
 
-      "#{escaped_params_str}&sign=#{sign}"
+      "#{escaped_params_str}&sign=#{Sign.package(package_params)}"
     end
 
     APP_SIGNATURE_PARAMS = [
