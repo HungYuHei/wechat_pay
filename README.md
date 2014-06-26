@@ -6,6 +6,7 @@ It contains:
 
 * generate access_token
 * generate prepay_id
+* generate payment params
 
 ## Installation
 
@@ -57,6 +58,26 @@ options = {
 }
 
 WechatPay::App.prepay_id(ACCESS_TOKEN, options)
+```
+
+### Payment params
+
+```ruby
+params = {
+  noncestr: 'noncestr',
+  timestamp: Time.now.to_i.to_s
+}
+WechatPay::App.payment('PREPAY_ID', params)
+# =>
+#   {
+#     appid:     'APP_ID',
+#     noncestr:  'noncestr',
+#     package:   'Sign=WXpay',
+#     partnerid: 'PARTNER_ID',
+#     prepayid:  'PREPAY_ID',
+#     timestamp: '1403695924',
+#     sign:      'SIGN'
+#   }
 ```
 
 ## Contributing

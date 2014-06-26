@@ -39,6 +39,22 @@ module WechatPay
       end
     end
 
+    # :noncestr, :timestamp
+    def self.payment(prepay_id, payment_params)
+      params = {
+        appid:     WechatPay.app_id,
+        noncestr:  payment_params[:noncestr],
+        package:   "Sign=WXpay",
+        partnerid: WechatPay.partner_id,
+        prepayid:  prepay_id,
+        timestamp: payment_params[:timestamp]
+      }
+
+      sign = Sign.generate(params)
+
+      params.merge(sign: sign)
+    end
+
     private
 
     # :body, :out_trade_no, :total_fee, :notify_url, :spbill_create_ip
