@@ -6,6 +6,7 @@ It contains:
 
 * generate access_token
 * generate payment params for App
+* verify notify
 
 ## Installation
 
@@ -72,6 +73,13 @@ WechatPay::App.payment('ACCESS_TOKEN', params)
 #     timestamp:  '1407165191',
 #     sign:       'sign'
 #   }
+```
+### Verify notify
+
+```ruby
+# for rails, you may want to except :controller_name, :action_name, :host, etc.
+# notify_params = params.except(*request.path_parameters.keys)
+WechatPay::Notify.verify?(notify_params)
 ```
 
 ## Contributing

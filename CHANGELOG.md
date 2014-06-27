@@ -1,5 +1,11 @@
 # Change Log
 
+## Unreleased
+
+### Add
+
+* `WechatPay::Notify.verify?`
+
 ## Version 0.1.0
 
 ### Breaking Change
