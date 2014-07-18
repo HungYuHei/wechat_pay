@@ -6,14 +6,32 @@ require 'securerandom'
 module WechatPay
   module App
 
-    # TODO should we check the required params?
+    # required params:
+    #   traceid, body, out_trade_no, total_fee, notify_url, spbill_create_ip
     def self.payment(access_token, params)
       noncestr = SecureRandom.hex(16)
       timestamp = Time.now.to_i.to_s
-      prepay_id = generate_prepay_id(access_token, params)
+      package = generate_package(params)
+
+      app_signature = generate_app_signature(
+        noncestr:  noncestr,
+        timestamp: timestamp,
+        package:   package,
+        traceid:   params[:traceid],
+      )
+
+      prepay_id = generate_prepay_id(
+        access_token,
+        traceid:       params[:traceid],
+        noncestr:      noncestr,
+        package:       package,
+        timestamp:     timestamp,
+        app_signature: app_signature
+      )
 
       params = {
         appid:     WechatPay.app_id,
+        appkey:    WechatPay.pay_sign_key,
         noncestr:  noncestr,
         package:   'Sign=WXpay',
         partnerid: WechatPay.partner_id,
@@ -22,29 +40,26 @@ module WechatPay
       }
 
       sign = Sign.generate(params)
-
       params.merge(sign: sign)
     end
 
     private
-
-    PREPAY_PARAMS = [
-      :appid, :traceid, :noncestr, :package, :timestamp, :app_signature, :sign_method
-    ]
 
     def self.generate_prepay_id(access_token, params)
       url = "https://api.weixin.qq.com/pay/genprepay?access_token=#{access_token}"
 
       params = {
         appid:         WechatPay.app_id,
-        package:       generate_package(params),
-        app_signature: generate_app_signature(params),
+        traceid:       params[:traceid],
+        noncestr:      params[:noncestr],
+        package:       params[:package],
+        timestamp:     params[:timestamp],
+        app_signature: params[:app_signature],
         sign_method:   'sha1'
-      }.merge(params)
-      params = Utils.slice_hash(params, *PREPAY_PARAMS)
+      }
 
-      RestClient.post(url, params) do |response|
-        JSON.parse(response.body)["prepayid"]
+      RestClient.post(url, JSON.generate(params)) do |response|
+        JSON.parse(response.body)['prepayid']
       end
     end
 
@@ -55,38 +70,34 @@ module WechatPay
     ]
 
     def self.generate_package(package_params)
-      package_params = {
-        bank_type: 'WX',
-        body: package_params[:body],
-        partner: WechatPay.partner_id,
-        out_trade_no: package_params[:out_trade_no],
-        total_fee: package_params[:total_fee],
-        fee_type: '1',
-        notify_url: package_params[:notify_url],
-        spbill_create_ip: package_params[:spbill_create_ip],
-        input_charset: 'UTF-8'
-      }.merge(package_params)
-
       package_params = Utils.slice_hash(package_params, *PACKAGE_PARAMS)
 
-      escaped_params_str = package_params.sort.map do |key, value|
-        "#{key}=#{URI.escape(value)}"
+      params = {
+        bank_type: 'WX',
+        fee_type: '1',
+        input_charset: 'UTF-8',
+        partner: WechatPay.partner_id
+      }.merge(package_params)
+
+      regexp = Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")
+      escaped_params_str = params.sort.map do |key, value|
+        "#{key}=#{URI.escape(value.to_s, regexp)}"
       end.join('&')
 
-      "#{escaped_params_str}&sign=#{Sign.package(package_params)}"
+      "#{escaped_params_str}&sign=#{Sign.package(params)}"
     end
-
-    APP_SIGNATURE_PARAMS = [
-      :appid, :appkey, :noncestr, :package, :timestamp, :traceid
-    ]
 
     def self.generate_app_signature(signature_params)
       params = {
         appid: WechatPay.app_id,
-        appkey: WechatPay.pay_sign_key
-      }.merge(signature_params)
+        appkey: WechatPay.pay_sign_key,
+        noncestr: signature_params[:noncestr],
+        package: signature_params[:package],
+        timestamp: signature_params[:timestamp],
+        traceid: signature_params[:traceid]
+      }
 
-      Sign.generate(Utils.slice_hash(params, *APP_SIGNATURE_PARAMS))
+      Sign.generate(params)
     end
   end
 end

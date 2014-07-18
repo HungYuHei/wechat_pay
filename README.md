@@ -68,6 +68,8 @@ WechatPay::App.payment('ACCESS_TOKEN', params)
 #   }
 ```
 
+Once you get the payment params, ...
+
 ## Contributing
 
 1. Fork it ( https://github.com/[my-github-username]/wechat_pay/fork )

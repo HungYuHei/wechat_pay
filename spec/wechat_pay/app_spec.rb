@@ -8,8 +8,8 @@ describe WechatPay::App do
       traceid:          'traceid',
       body:             'body',
       out_trade_no:     'out_trade_no',
-      total_fee:        'total_fee',
-      notify_url:       'http://your_domain.com',
+      total_fee:        '2',
+      notify_url:       'http://your_domain.com/notify',
       spbill_create_ip: '192.168.1.1'
     }
 
