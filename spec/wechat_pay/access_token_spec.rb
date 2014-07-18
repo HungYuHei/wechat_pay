@@ -11,6 +11,8 @@ describe WechatPay::AccessToken do
   end
 
   it ".generate" do
-    WechatPay::AccessToken.generate['access_token'].must_equal @access_token
+    data = WechatPay::AccessToken.generate
+    data[:access_token].must_equal @access_token
+    data[:expires_in].must_be_kind_of Fixnum
   end
 end

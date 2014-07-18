@@ -37,14 +37,23 @@ WechatPay.partner_key  = 'YOUR_PARTNER_KEY'
 ### Access Token
 
 ```ruby
-WechatPay::AccessToken.generate # => { "access_token" => ACCESS_TOKEN, "expires_in" => 7200 }
+WechatPay::AccessToken.generate # => { access_token: 'ACCESS_TOKEN', expires_in: 7200 }
 ```
 
 Your should cache the access_token, see http://mp.weixin.qq.com/wiki/index.php?title=%E8%8E%B7%E5%8F%96access_token
 
+You can do something like this in Rails:
+
+```ruby
+Rails.cache.fetch(:wechat_pay_access_token, expires: 7200.seconds raw: true) do
+  WechatPay::AccessToken.generate[:access_token]
+end
+```
+
 ### Payment params
 
 ```ruby
+# Please keep in mind that all key MUST be Symbol
 params = {
   traceid:          'traceid',
   body:             'body',
