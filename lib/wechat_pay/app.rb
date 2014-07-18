@@ -29,7 +29,7 @@ module WechatPay
         app_signature: app_signature
       )
 
-      params = {
+      pay_sign = Sign.generate(
         appid:     WechatPay.app_id,
         appkey:    WechatPay.pay_sign_key,
         noncestr:  noncestr,
@@ -37,10 +37,9 @@ module WechatPay
         partnerid: WechatPay.partner_id,
         prepayid:  prepay_id,
         timestamp: timestamp
-      }
+      )
 
-      sign = Sign.generate(params)
-      params.merge(sign: sign)
+      { prepay_id: prepay_id, pay_sign: pay_sign }
     end
 
     private

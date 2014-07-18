@@ -58,13 +58,8 @@ params = {
 WechatPay::App.payment('ACCESS_TOKEN', params)
 # =>
 #   {
-#     appid:     'APP_ID',
-#     noncestr:  'noncestr',
-#     package:   'Sign=WXpay',
-#     partnerid: 'PARTNER_ID',
-#     prepayid:  'PREPAY_ID',
-#     timestamp: '1403695924',
-#     sign:      'SIGN'
+#     prepay_id: 'PREPAY_ID',
+#     pay_sign: 'PAY_SIGN'
 #   }
 ```
 

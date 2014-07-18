@@ -21,7 +21,7 @@ describe WechatPay::App do
 
     payment = WechatPay::App.payment('access_token', prepay_params)
 
-    payment[:prepayid].must_equal prepay_id
-    payment[:sign].wont_be_empty
+    payment[:prepay_id].must_equal prepay_id
+    payment[:pay_sign].wont_be_empty
   end
 end
