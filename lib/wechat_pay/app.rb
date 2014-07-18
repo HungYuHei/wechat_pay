@@ -2,6 +2,7 @@ require 'uri'
 require 'json'
 require 'rest_client'
 require 'securerandom'
+require 'digest/md5'
 
 module WechatPay
   module App
@@ -83,7 +84,7 @@ module WechatPay
         "#{key}=#{URI.escape(value.to_s, regexp)}"
       end.join('&')
 
-      "#{escaped_params_str}&sign=#{Sign.package(params)}"
+      "#{escaped_params_str}&sign=#{package_sign(params)}"
     end
 
     def self.generate_app_signature(signature_params)
@@ -97,6 +98,12 @@ module WechatPay
       }
 
       Sign.generate(params)
+    end
+
+    def self.package_sign(params)
+      str = params.sort.map { |item| item.join('=') }.join('&')
+      str << "&key=#{WechatPay.partner_key}"
+      Digest::MD5.hexdigest(str).upcase
     end
   end
 end
