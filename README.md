@@ -1,11 +1,11 @@
 # WechatPay
 
-Wechat Pay: https://open.weixin.qq.com
+Wechat Pay: https://open.weixin.qq.com/cgi-bin/frame?t=home/pay_tmpl&lang=zh_CN
 
 It contains:
 
 * generate access_token
-* generate payment params
+* generate payment params for App
 
 ## Installation
 
@@ -31,7 +31,6 @@ WechatPay.app_secret   = 'YOUR_APP_SECRET'
 WechatPay.pay_sign_key = 'YOUR_PAY_SIGN_KEY'
 WechatPay.partner_id   = 'YOUR_PARTNER_ID'
 WechatPay.partner_key  = 'YOUR_PARTNER_KEY'
-
 ```
 
 ### Access Token
@@ -40,9 +39,9 @@ WechatPay.partner_key  = 'YOUR_PARTNER_KEY'
 WechatPay::AccessToken.generate # => { access_token: 'ACCESS_TOKEN', expires_in: 7200 }
 ```
 
-Your should cache the access_token, see http://mp.weixin.qq.com/wiki/index.php?title=%E8%8E%B7%E5%8F%96access_token
+Your should cache the `access_token`, see [http://mp.weixin.qq.com/wiki...](http://mp.weixin.qq.com/wiki/index.php?title=%E8%8E%B7%E5%8F%96access_token)
 
-You can do something like this in Rails:
+You may wanna do something like this in Rails:
 
 ```ruby
 Rails.cache.fetch(:wechat_pay_access_token, expires: 7200.seconds raw: true) do
@@ -55,15 +54,14 @@ end
 ```ruby
 # Please keep in mind that all key MUST be Symbol
 params = {
-  traceid:          'traceid',
   body:             'body',
-  out_trade_no:     'out_trade_no',
-  total_fee:        'total_fee',
-  notify_url:       'http://your_domain.com',
+  traceid:          'traceid',      # Your user id
+  out_trade_no:     'out_trade_no', # Your order id
+  total_fee:        '100',          # 注意：单位是分，不是元
+  notify_url:       'http://your_domain.com/notify',
   spbill_create_ip: '192.168.1.1'
 }
 
-# it will automatically generate prepay_id for you.
 WechatPay::App.payment('ACCESS_TOKEN', params)
 # =>
 #   {
@@ -72,11 +70,9 @@ WechatPay::App.payment('ACCESS_TOKEN', params)
 #   }
 ```
 
-Once you get the payment params, ...
-
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/wechat_pay/fork )
+1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
