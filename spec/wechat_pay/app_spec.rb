@@ -21,7 +21,11 @@ describe WechatPay::App do
 
     payment = WechatPay::App.payment('access_token', prepay_params)
 
+    payment[:partner_id].must_equal WechatPay.partner_id
+    payment[:nonce_str].wont_be_empty
+    payment[:package].wont_be_empty
     payment[:prepay_id].must_equal prepay_id
-    payment[:pay_sign].wont_be_empty
+    payment[:timestamp].wont_be_empty
+    payment[:sign].wont_be_empty
   end
 end

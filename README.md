@@ -44,7 +44,7 @@ Your should cache the `access_token`, see [http://mp.weixin.qq.com/wiki...](http
 You may wanna do something like this in Rails:
 
 ```ruby
-Rails.cache.fetch(:wechat_pay_access_token, expires: 7200.seconds raw: true) do
+Rails.cache.fetch(:wechat_pay_access_token, expires_in: 7200.seconds raw: true) do
   WechatPay::AccessToken.generate[:access_token]
 end
 ```
@@ -65,8 +65,12 @@ params = {
 WechatPay::App.payment('ACCESS_TOKEN', params)
 # =>
 #   {
-#     prepay_id: 'PREPAY_ID',
-#     pay_sign: 'PAY_SIGN'
+#     nonce_str:  'noncestr',
+#     package:    'Sign=WXpay',
+#     partner_id: 'partner_id',
+#     prepay_id:  'prepay_id',
+#     timestamp:  '1407165191',
+#     sign:       'sign'
 #   }
 ```
 

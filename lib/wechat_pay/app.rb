@@ -30,7 +30,7 @@ module WechatPay
         app_signature: app_signature
       )
 
-      pay_sign = Sign.generate(
+      attrs = {
         appid:     WechatPay.app_id,
         appkey:    WechatPay.pay_sign_key,
         noncestr:  noncestr,
@@ -38,9 +38,17 @@ module WechatPay
         partnerid: WechatPay.partner_id,
         prepayid:  prepay_id,
         timestamp: timestamp
-      )
+      }
+      sign = Sign.generate(attrs)
 
-      { prepay_id: prepay_id, pay_sign: pay_sign }
+      {
+        sign:       sign,
+        package:    attrs[:package],
+        nonce_str:  attrs[:noncestr],
+        prepay_id:  attrs[:prepayid],
+        timestamp:  attrs[:timestamp],
+        partner_id: attrs[:partnerid]
+      }
     end
 
     private
