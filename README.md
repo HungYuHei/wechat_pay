@@ -11,7 +11,7 @@ It contains:
 
 Add this line to your application's Gemfile:
 
-    gem 'wechat_pay'
+    gem 'wechat_pay', '~> 0.1.0'
 
 And then execute:
 
