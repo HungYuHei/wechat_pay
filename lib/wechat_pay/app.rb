@@ -92,7 +92,7 @@ module WechatPay
         "#{key}=#{URI.escape(value.to_s, regexp)}"
       end.join('&')
 
-      "#{escaped_params_str}&sign=#{package_sign(params)}"
+      "#{escaped_params_str}&sign=#{Sign.md5(params)}"
     end
 
     def self.generate_app_signature(signature_params)
@@ -106,12 +106,6 @@ module WechatPay
       }
 
       Sign.sha1(params)
-    end
-
-    def self.package_sign(params)
-      str = params.sort.map { |item| item.join('=') }.join('&')
-      str << "&key=#{WechatPay.partner_key}"
-      Digest::MD5.hexdigest(str).upcase
     end
   end
 end

@@ -5,4 +5,9 @@ describe WechatPay::Sign do
     params = { appid: 'appid', appkey: 'appkey' }
     WechatPay::Sign.sha1(params).wont_be_empty
   end
+
+  it ".md5" do
+    params = { appid: 'appid' }
+    WechatPay::Sign.sha1(params).wont_be_empty
+  end
 end
