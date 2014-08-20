@@ -1,10 +1,18 @@
 require 'spec_helper'
 
 describe WechatPay::App do
+  let(:prepay_id) { 'TEST_PREPAY_ID' }
+
+  before do
+    FakeWeb.register_uri(
+      :post,
+      %r|https://api\.weixin\.qq\.com/pay/genprepay.+|,
+      body: %Q({"prepayid":"#{prepay_id}","errcode":0,"errmsg":"Success"})
+    )
+  end
 
   it ".payment" do
-    prepay_id = "PREPAY_ID"
-    prepay_params = {
+    params = {
       traceid:          'traceid',
       body:             'body',
       out_trade_no:     'out_trade_no',
@@ -13,13 +21,7 @@ describe WechatPay::App do
       spbill_create_ip: '192.168.1.1'
     }
 
-    FakeWeb.register_uri(
-      :post,
-      %r|https://api\.weixin\.qq\.com/pay/genprepay.+|,
-      body: %Q({"prepayid":"#{prepay_id}","errcode":0,"errmsg":"Success"})
-    )
-
-    payment = WechatPay::App.payment('access_token', prepay_params)
+    payment = WechatPay::App.payment('access_token', params)
 
     payment[:partner_id].must_equal WechatPay.partner_id
     payment[:nonce_str].wont_be_empty
