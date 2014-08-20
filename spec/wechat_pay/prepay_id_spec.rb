@@ -18,6 +18,6 @@ describe WechatPay::PrepayId do
       package: 'package',
       timestamp: Time.now.to_i.to_s,
     }
-    WechatPay::PrepayId.generate('ACCESS_TOKEN', params).must_equal(prepay_id)
+    WechatPay::PrepayId::App.generate('ACCESS_TOKEN', params).must_equal(prepay_id)
   end
 end

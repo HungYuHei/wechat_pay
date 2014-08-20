@@ -10,6 +10,6 @@ describe WechatPay::Package do
       spbill_create_ip: '127.0.0.1'
     }
 
-    WechatPay::Package.generate(params).must_include '&sign='
+    WechatPay::Package::App.generate(params).must_include '&sign='
   end
 end
