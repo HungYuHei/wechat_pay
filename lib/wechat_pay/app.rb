@@ -39,7 +39,7 @@ module WechatPay
         prepayid:  prepay_id,
         timestamp: timestamp
       }
-      sign = Sign.generate(attrs)
+      sign = Sign.sha1(attrs)
 
       {
         sign:       sign,
@@ -105,7 +105,7 @@ module WechatPay
         traceid: signature_params[:traceid]
       }
 
-      Sign.generate(params)
+      Sign.sha1(params)
     end
 
     def self.package_sign(params)
