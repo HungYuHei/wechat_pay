@@ -1,8 +1,13 @@
 require 'spec_helper'
 
 describe WechatPay::Sign do
-  it ".generate" do
+  it ".sha1" do
     params = { appid: 'appid', appkey: 'appkey' }
-    WechatPay::Sign.generate(params).wont_be_empty
+    WechatPay::Sign.sha1(params).wont_be_empty
+  end
+
+  it ".md5" do
+    params = { appid: 'appid' }
+    WechatPay::Sign.sha1(params).wont_be_empty
   end
 end
