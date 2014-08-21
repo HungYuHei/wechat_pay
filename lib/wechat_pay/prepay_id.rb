@@ -1,3 +1,6 @@
+require 'json'
+require 'rest_client'
+
 module WechatPay
   module PrepayId
     module App

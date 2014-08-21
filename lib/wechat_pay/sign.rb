@@ -1,4 +1,5 @@
 require 'digest/sha1'
+require 'digest/md5'
 
 module WechatPay
   module Sign

@@ -1,5 +1,3 @@
-require 'digest/md5'
-
 module WechatPay
   module Notify
     def self.verify?(params)

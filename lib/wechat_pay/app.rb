@@ -1,9 +1,3 @@
-require 'uri'
-require 'json'
-require 'rest_client'
-require 'securerandom'
-require 'digest/md5'
-
 module WechatPay
   module App
 
