@@ -1,18 +1,22 @@
 # WechatPay
 
-Wechat Pay: https://open.weixin.qq.com/cgi-bin/frame?t=home/pay_tmpl&lang=zh_CN
+微信支付: https://open.weixin.qq.com/cgi-bin/frame?t=home/pay_tmpl&lang=zh_CN
 
 It contains:
 
-* generate access_token
-* generate payment params for App
+* generate access-token
+* App payment
 * verify notify
+* Native payment (Work In Process)
+* JS payment (Work In Process)
+
+MRI Ruby 2.0.0 and newer are supported. 1.9.2 should work as well but not tested.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'wechat_pay', '~> 0.1.0'
+    gem 'wechat_pay'
 
 And then execute:
 
@@ -40,7 +44,7 @@ WechatPay.partner_key  = 'YOUR_PARTNER_KEY'
 WechatPay::AccessToken.generate # => { access_token: 'ACCESS_TOKEN', expires_in: 7200 }
 ```
 
-Your should cache the `access_token`, see [http://mp.weixin.qq.com/wiki...](http://mp.weixin.qq.com/wiki/index.php?title=%E8%8E%B7%E5%8F%96access_token)
+Your should cache the `access_token`, see [http://mp.weixin.qq.com/wiki/index.php...](http://mp.weixin.qq.com/wiki/index.php?title=%E8%8E%B7%E5%8F%96access_token)
 
 You may wanna do something like this in Rails:
 
@@ -77,9 +81,22 @@ WechatPay::App.payment('ACCESS_TOKEN', params)
 ### Verify notify
 
 ```ruby
-# for rails, you may want to except :controller_name, :action_name, :host, etc.
-# notify_params = params.except(*request.path_parameters.keys)
-WechatPay::Notify.verify?(notify_params)
+# Rails example
+
+def app_notify
+  # except :controller_name, :action_name, :host, etc.
+  notify_params = params.except(*request.path_parameters.keys)
+
+  if WechatPay::Notify.verify?(notify_params)
+    # Valid notify status
+    if params[:trade_state] == '0'
+      # Code your business logic
+    end
+    render text: 'success'
+  else
+    render text: 'error'
+  end
+end
 ```
 
 ## Contributing

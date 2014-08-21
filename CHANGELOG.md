@@ -1,6 +1,6 @@
-# Change Log
+# Changelog
 
-## Unreleased
+## Version 0.2.0
 
 ### Add
 
@@ -10,4 +10,4 @@
 
 ### Breaking Change
 
-* 修改 `WechatPay::App.payment` 返回值 [c10c1c](https://github.com/HungYuHei/wechat_pay/commit/c10c1cc40ff54c584f3855d0d3264207e45778d0)
+* 修改 `WechatPay::App.payment` 返回值  [c10c1c](https://github.com/HungYuHei/wechat_pay/commit/c10c1cc40ff54c584f3855d0d3264207e45778d0)

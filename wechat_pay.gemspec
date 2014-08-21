@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = WechatPay::VERSION
   spec.authors       = ["HungYuHei"]
   spec.email         = ["kongruxi@gmail.com"]
-  spec.summary       = "Wechat pay"
-  spec.description   = "Wechat pay"
+  spec.summary       = "微信支付"
+  spec.description   = "微信支付"
   spec.homepage      = "https://github.com/HungYuHei/wechat_pay"
   spec.license       = "WTFPL"
 
