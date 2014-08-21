@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary       = "Wechat pay"
   spec.description   = "Wechat pay"
   spec.homepage      = "https://github.com/HungYuHei/wechat_pay"
-  spec.license       = "MIT"
+  spec.license       = "WTFPL"
 
   spec.files         = `git ls-files -z`.split("\x0")
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
