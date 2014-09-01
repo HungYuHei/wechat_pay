@@ -6,8 +6,8 @@ describe WechatPay::Sign do
     WechatPay::Sign.sha1(params).wont_be_empty
   end
 
-  it ".md5" do
+  it ".md5_with_partner_key" do
     params = { appid: 'appid' }
-    WechatPay::Sign.sha1(params).wont_be_empty
+    WechatPay::Sign.md5_with_partner_key(params).wont_be_empty
   end
 end

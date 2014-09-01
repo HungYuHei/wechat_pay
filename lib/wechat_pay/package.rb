@@ -22,7 +22,7 @@ module WechatPay
           "#{key}=#{URI.escape(value.to_s, regexp)}"
         end.join('&')
 
-        "#{escaped_params_str}&sign=#{Sign.md5(params)}"
+        "#{escaped_params_str}&sign=#{Sign.md5_with_partner_key(params)}"
       end
     end
   end
