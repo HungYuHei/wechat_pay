@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Add
+
+* Add `WechatPay::JS.payment`
+
 ## Version 0.2.0
 
 ### Add

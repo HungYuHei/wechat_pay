@@ -1,3 +1,4 @@
+require 'wechat_pay/js'
 require 'wechat_pay/app'
 require 'wechat_pay/sign'
 require 'wechat_pay/utils'
