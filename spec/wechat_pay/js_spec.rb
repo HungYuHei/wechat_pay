@@ -10,7 +10,7 @@ describe WechatPay::JS do
       spbill_create_ip: '192.168.1.1'
     }
 
-    package = WechatPay::Package::App.generate(params)
+    package = WechatPay::Package.generate(params)
     payment = WechatPay::JS.payment(params)
 
     payment[:app_id].must_equal WechatPay.app_id

@@ -2,7 +2,7 @@ module WechatPay
   module JS
     def self.payment(params)
       sign_attrs = {
-        package:   Package::App.generate(params),
+        package:   Package.generate(params),
         appid:     WechatPay.app_id,
         appkey:    WechatPay.pay_sign_key,
         noncestr:  SecureRandom.hex(16),

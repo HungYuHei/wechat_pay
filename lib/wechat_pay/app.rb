@@ -6,7 +6,7 @@ module WechatPay
     def self.payment(access_token, params)
       noncestr = SecureRandom.hex(16)
       timestamp = Time.now.to_i.to_s
-      package = Package::App.generate(params)
+      package = Package.generate(params)
 
       prepay_id = PrepayId::App.generate(
         access_token,
