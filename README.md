@@ -9,6 +9,7 @@ It contains:
 * JS payment
 * Native payment (Work In Process)
 * verify notify
+* deliver notify
 
 MRI Ruby 2.0.0 and newer are supported. 1.9.2 should work as well but not tested.
 
@@ -78,6 +79,7 @@ WechatPay::App.payment('ACCESS_TOKEN', params)
 #     sign:       'sign'
 #   }
 ```
+
 ### JS Payment params
 
 * In Controller
@@ -135,7 +137,6 @@ javascript:
 
 ```ruby
 # Rails example
-
 def app_notify
   # except :controller_name, :action_name, :host, etc.
   notify_params = params.except(*request.path_parameters.keys)
@@ -150,6 +151,23 @@ def app_notify
     render text: 'error'
   end
 end
+```
+
+### Deliver Notify
+
+```
+# Please keep in mind that all key MUST be Symbol
+params = {
+  openid: 'openid',
+  transid: 'transid',
+  out_trade_no: 'out_trade_no',
+  deliver_msg: 'ok',              # optional, default is 'ok'
+  deliver_status: '1',            # optional, default is '1'
+  deliver_timestamp: '1410105134' # optional, default is `Time.now.to_i.to_s`
+}
+
+WechatPay::DeliverNotify.request('ACCESS_TOKEN', params)
+# => { errcode: 0, errmsg: 'ok' }
 ```
 
 ## Contributing

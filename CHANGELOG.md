@@ -4,7 +4,8 @@
 
 ### Add
 
-* Add `WechatPay::JS.payment`
+* `WechatPay::JS.payment`
+* `WechatPay::DeliverNotify.request`
 
 ## Version 0.2.0
 

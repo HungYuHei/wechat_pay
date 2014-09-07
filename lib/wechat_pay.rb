@@ -7,6 +7,7 @@ require 'wechat_pay/version'
 require 'wechat_pay/package'
 require 'wechat_pay/prepay_id'
 require 'wechat_pay/access_token'
+require 'wechat_pay/deliver_notify'
 
 module WechatPay
   class << self
