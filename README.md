@@ -6,9 +6,9 @@ It contains:
 
 * generate access-token
 * App payment
-* verify notify
+* JS payment
 * Native payment (Work In Process)
-* JS payment (Work In Process)
+* verify notify
 
 MRI Ruby 2.0.0 and newer are supported. 1.9.2 should work as well but not tested.
 
