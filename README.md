@@ -54,7 +54,7 @@ Rails.cache.fetch(:wechat_pay_access_token, expires_in: 7200.seconds raw: true) 
 end
 ```
 
-### Payment params
+### App Payment params
 
 ```ruby
 # Please keep in mind that all key MUST be Symbol
@@ -78,6 +78,50 @@ WechatPay::App.payment('ACCESS_TOKEN', params)
 #     sign:       'sign'
 #   }
 ```
+### JS Payment params
+
+* In Controller
+
+```ruby
+params = {
+  body:             'body',
+  out_trade_no:     'out_trade_no'
+  total_fee:        '100'
+  notify_url:       'http://your_domain.com/notify',
+  spbill_create_ip: '192.168.1.1'
+}
+
+@order_params = WechatPay::JS.payment('ACCESS_TOKEN', params)
+
+# =>
+#   {
+#     nonceStr:  'noncestr',
+#     package:    'Sign=WXpay',
+#     partnerId: 'partner_id',
+#     prepayId:  'prepay_id',
+#     timeStamp:  '1407165191',
+#     sign:       'sign'
+#   }
+```
+
+* In View (slim)
+```ruby
+= link_to "wechat_payment_btn", "javascript:void(0)", class: "wechatPaymentBtn"
+
+javascript:
+  document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+    $('.wechatPaymentBtn').click(function(){
+      WeixinJSBridge.invoke('getBrandWCPayRequest', "#{@order_params}" %>, function(res){
+        if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+          alert('pay for success!');
+        }else{
+          alert(res.err_msg);
+        }
+      });
+    });
+  }, false);
+```
+
 ### Verify notify
 
 ```ruby
