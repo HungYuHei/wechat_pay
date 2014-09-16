@@ -49,7 +49,7 @@ Your should cache the `access_token`, see [http://mp.weixin.qq.com/wiki/index.ph
 You may wanna do something like this in Rails:
 
 ```ruby
-Rails.cache.fetch(:wechat_pay_access_token, expires_in: 7200.seconds raw: true) do
+Rails.cache.fetch(:wechat_pay_access_token, expires_in: 7200.seconds, raw: true) do
   WechatPay::AccessToken.generate[:access_token]
 end
 ```
@@ -94,24 +94,33 @@ params = {
 @order_params = WechatPay::JS.payment('ACCESS_TOKEN', params)
 
 # =>
-#   {
-#     nonceStr:  'noncestr',
-#     package:    'Sign=WXpay',
-#     partnerId: 'partner_id',
-#     prepayId:  'prepay_id',
-#     timeStamp:  '1407165191',
-#     sign:       'sign'
-#   }
+#    {
+#      app_id:    "app_id",
+#      timestamp: "1407165191",
+#      nonce_str: "noncestr",
+#      package:   "Sign=WXpay",
+#      pay_sign:  "pay_sign",
+#      sign_type: 'SHA1'
+#    }
 ```
 
 * In View (slim)
 ```ruby
+#Simple example
 = link_to "wechat_payment_btn", "javascript:void(0)", class: "wechatPaymentBtn"
 
 javascript:
+  var orderParams = { 
+    appId:     "#{@order_params[:app_id]}",
+    timeStamp: "#{@order_params[:timestamp]}",
+    nonceStr:  "#{@order_params[:nonce_str]}",
+    package:   "#{@order_params[:package]}",
+    paySign:   "#{@order_params[:pay_sign]}",
+    signType: "#{@order_params[:sign_type]}"
+  };
   document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
     $('.wechatPaymentBtn').click(function(){
-      WeixinJSBridge.invoke('getBrandWCPayRequest', "#{@order_params}" %>, function(res){
+      WeixinJSBridge.invoke('getBrandWCPayRequest', orderParams, function(res){
         if(res.err_msg == "get_brand_wcpay_request:ok" ) {
           alert('pay for success!');
         }else{

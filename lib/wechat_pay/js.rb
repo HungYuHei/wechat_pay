@@ -11,12 +11,12 @@ module WechatPay
       pay_sign = Sign.sha1(sign_attrs)
 
       {
-        appId:    sign_attrs[:appid],
-        timeStamp: sign_attrs[:timestamp],
-        nonceStr: sign_attrs[:noncestr],
+        app_id:    sign_attrs[:appid],
+        timestamp: sign_attrs[:timestamp],
+        nonce_str: sign_attrs[:noncestr],
         package:   sign_attrs[:package],
-        paySign:  pay_sign,
-        signType: 'SHA1'
+        pay_sign:  pay_sign,
+        sign_type: 'SHA1'
       }
     end
   end
