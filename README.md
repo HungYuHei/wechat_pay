@@ -91,7 +91,7 @@ params = {
   spbill_create_ip: '192.168.1.1'
 }
 
-@order_params = WechatPay::JS.payment('ACCESS_TOKEN', params)
+@order_params = WechatPay::JS.payment(params)
 
 # =>
 #    {
