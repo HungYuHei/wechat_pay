@@ -5,11 +5,12 @@
 It contains:
 
 * generate access-token
-* App payment
-* JS payment
-* Native payment (Work In Process)
+* app payment
+* js payment
+* native payment (work in process)
 * verify notify
 * deliver notify
+* order query
 
 MRI Ruby 2.0.0 and newer are supported. 1.9.2 should work as well but not tested.
 
@@ -82,7 +83,7 @@ WechatPay::App.payment('ACCESS_TOKEN', params)
 
 ### JS Payment params
 
-* In Controller
+###### In Controller
 
 ```ruby
 params = {
@@ -106,10 +107,10 @@ params = {
 #    }
 ```
 
-* In View (slim)
+###### In View (slim)
+
 ```ruby
-#Simple example
-= link_to "wechat_payment_btn", "javascript:void(0)", class: "wechatPaymentBtn"
+= link_to "wechat_payment_btn", "javascript:void(0)", id: "wechatPaymentBtn"
 
 javascript:
   var orderParams = { 
@@ -118,14 +119,14 @@ javascript:
     nonceStr:  "#{@order_params[:nonce_str]}",
     package:   "#{@order_params[:package]}",
     paySign:   "#{@order_params[:pay_sign]}",
-    signType: "#{@order_params[:sign_type]}"
+    signType:  "#{@order_params[:sign_type]}"
   };
   document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
-    $('.wechatPaymentBtn').click(function(){
-      WeixinJSBridge.invoke('getBrandWCPayRequest', orderParams, function(res){
-        if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+    $('#wechatPaymentBtn').click(function(){
+      WeixinJSBridge.invoke('getBrandWCPayRequest', orderParams, function(res) {
+        if (res.err_msg == "get_brand_wcpay_request:ok") {
           alert('pay for success!');
-        }else{
+        } else {
           alert(res.err_msg);
         }
       });
