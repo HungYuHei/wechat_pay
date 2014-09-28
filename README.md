@@ -155,7 +155,7 @@ end
 
 ### Deliver Notify
 
-```
+```ruby
 # Please keep in mind that all key MUST be Symbol
 params = {
   openid: 'openid',
@@ -168,6 +168,13 @@ params = {
 
 WechatPay::DeliverNotify.request('ACCESS_TOKEN', params)
 # => { errcode: 0, errmsg: 'ok' }
+```
+
+### Order Query
+
+```ruby
+WechatPay::OrderQuery.request('ACCESS_TOKEN', 'YOUR_OUT_TRADE_NO')
+# => { errcode: 0, errmsg: 'ok', order_info: { ret_code: 0, ... } }
 ```
 
 ## Contributing

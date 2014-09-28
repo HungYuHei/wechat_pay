@@ -6,6 +6,7 @@
 
 * `WechatPay::JS.payment`
 * `WechatPay::DeliverNotify.request`
+* `WechatPay::OrderQuery.request`
 
 ## Version 0.2.0
 
