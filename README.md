@@ -7,7 +7,7 @@ It contains:
 * generate access-token
 * app payment
 * js payment
-* native payment (work in process)
+* native payment
 * verify notify
 * deliver notify
 * order query
@@ -79,6 +79,13 @@ WechatPay::App.payment('ACCESS_TOKEN', params)
 #     timestamp:  '1407165191',
 #     sign:       'sign'
 #   }
+```
+
+### Native Payment params
+
+```ruby
+WechatPay::Native.payment(product_id)
+# => "weixin://wxpay/bizpayurl?sign=SIGN&productid=..."
 ```
 
 ### JS Payment params

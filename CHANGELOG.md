@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 0.4.0 (Unreleased)
+
+### Add
+
+* `WechatPay::Native.payment`
+
 ## Version 0.3.0
 
 ### Add
