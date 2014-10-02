@@ -5,6 +5,8 @@
 ### Add
 
 * `WechatPay::Native.payment`
+* `WechatPay::Native.verify?`
+* `WechatPay::Native.package`
 
 ## Version 0.3.0
 

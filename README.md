@@ -83,9 +83,56 @@ WechatPay::App.payment('ACCESS_TOKEN', params)
 
 ### Native Payment params
 
+###### generate url
+
 ```ruby
-WechatPay::Native.payment(product_id)
+WechatPay::Native.payment('OUT_TRADE_NO')
 # => "weixin://wxpay/bizpayurl?sign=SIGN&productid=..."
+```
+
+###### verify and generate package
+
+```ruby
+# example in rails controller
+def package
+  request_data = Hash.from_xml(request.body.read)['xml']
+  app_signature = request_data['AppSignature']
+  verify_params = {
+    productid:   request_data['ProductId'],
+    timestamp:   request_data['TimeStamp'],
+    noncestr:    request_data['NonceStr'],
+    openid:      request_data['OpenId'],
+    issubscribe: request_data['IsSubscribe']
+  }
+  verified = WechatPay::Native.verify?(app_signature, verify_params)
+
+  if verified
+    # find the order by `request_data['ProductId']`
+    package_params = {
+      body:             'body',
+      out_trade_no:     'out_trade_no',
+      total_fee:        '1',
+      notify_url:       'http://your_domain.com/notify',
+      spbill_create_ip: '192.168.1.1'
+    }
+    @data = WechatPay::Native.package('0', 'ok', package_params)
+    render format: :xml
+  else
+    render nothing: true
+  end
+end
+
+# package.xml.erb
+<xml>
+    <AppId><![CDATA[<%= @data[:app_id] %>]]></AppId>
+    <NonceStr><![CDATA[<%= @data[:nonce_str] %>]]></NonceStr>
+    <TimeStamp><%= @data[:timestamp] %></TimeStamp>
+    <Package><![CDATA[<%= @data[:package] %>]]></Package>
+    <RetCode><%= @data[:ret_code] %></RetCode>
+    <RetErrMsg><![CDATA[<%= @data[:ret_err_msg] %>]]></RetErrMsg>
+    <SignMethod><![CDATA[<%= @data[:sign_method] %>]]></SignMethod>
+    <AppSignature><![CDATA[<%= @data[:app_signature] %>]]></AppSignature>
+</xml>
 ```
 
 ### JS Payment params
