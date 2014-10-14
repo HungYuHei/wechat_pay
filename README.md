@@ -56,7 +56,7 @@ Rails.cache.fetch(:wechat_pay_access_token, expires_in: 7200.seconds, raw: true)
 end
 ```
 
-### App Payment params
+### App Payment
 
 ```ruby
 # Please keep in mind that all key MUST be Symbol
@@ -81,7 +81,7 @@ WechatPay::App.payment('ACCESS_TOKEN', params)
 #   }
 ```
 
-### Native Payment params
+### Native Payment
 
 ###### generate url
 
@@ -118,7 +118,7 @@ def package
     @data = WechatPay::Native.package('0', 'ok', package_params)
     render "package.xml.erb"
   else
-    render nothing: true
+    head(200)
   end
 end
 
@@ -135,7 +135,7 @@ end
 </xml>
 ```
 
-### JS Payment params
+### JS Payment
 
 ###### In Controller
 
@@ -161,22 +161,22 @@ params = {
 #    }
 ```
 
-###### In View (slim)
+###### In View
 
 ```ruby
-= link_to "wechat_payment_btn", "javascript:void(0)", id: "wechatPaymentBtn"
+<%= link_to "wechat_payment_btn", "javascript:void(0)", id: "wechatPaymentBtn" %>
 
-javascript:
+<%= javascript_tag do %>
   var orderParams = { 
-    appId:     "#{@order_params[:app_id]}",
-    timeStamp: "#{@order_params[:timestamp]}",
-    nonceStr:  "#{@order_params[:nonce_str]}",
-    package:   "#{@order_params[:package]}",
-    paySign:   "#{@order_params[:pay_sign]}",
-    signType:  "#{@order_params[:sign_type]}"
+    appId:     "<%= @order_params[:app_id] %>",
+    timeStamp: "<%= @order_params[:timestamp] %>",
+    nonceStr:  "<%= @order_params[:nonce_str] %>",
+    package:   "<%= @order_params[:package] %>",
+    paySign:   "<%= @order_params[:pay_sign] %>",
+    signType:  "<%= @order_params[:sign_type] %>"
   };
   document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
-    $('#wechatPaymentBtn').click(function(){
+    $('#wechatPaymentBtn').click(function() {
       WeixinJSBridge.invoke('getBrandWCPayRequest', orderParams, function(res) {
         if (res.err_msg == "get_brand_wcpay_request:ok") {
           alert('pay for success!');
@@ -186,6 +186,7 @@ javascript:
       });
     });
   }, false);
+<% end %>
 ```
 
 ### Verify notify
@@ -210,7 +211,7 @@ end
 
 def warning_notify
   attrs = Hash.from_xml(request.ody.read)['xml']
-                     .transform_keys{ |k| k.downcase.to_sym }
+              .transform_keys{ |k| k.downcase.to_sym }
   attrs.delete(:signmethod)
   app_signature = attrs.delete(:appsignature)
 
