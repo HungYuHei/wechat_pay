@@ -7,6 +7,7 @@
 * `WechatPay::Native.payment`
 * `WechatPay::Native.verify?`
 * `WechatPay::Native.package`
+* `WechatPay::Notify::Warning.verify?`
 
 ## Version 0.3.0
 

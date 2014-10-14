@@ -192,7 +192,8 @@ javascript:
 
 ```ruby
 # Rails example
-def app_notify
+# for app, js and native
+def notify
   # except :controller_name, :action_name, :host, etc.
   notify_params = params.except(*request.path_parameters.keys)
 
@@ -205,6 +206,19 @@ def app_notify
   else
     render text: 'error'
   end
+end
+
+def warning_notify
+  attrs = Hash.from_xml(request.ody.read)['xml']
+                     .transform_keys{ |k| k.downcase.to_sym }
+  attrs.delete(:signmethod)
+  app_signature = attrs.delete(:appsignature)
+
+  if WechatPay::Notify::Warning.verify?(app_signature, attrs)
+    # Code your business logic
+  end
+
+  head(200)
 end
 ```
 

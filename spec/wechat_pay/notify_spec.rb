@@ -15,4 +15,17 @@ describe WechatPay::Notify do
       WechatPay::Notify.verify?(params.merge(sign: sign)).must_equal(true)
     end
   end
+
+  it "Warning.verify?" do
+    app_signature = 'incorrect_app_signature'
+    params = {
+      appid: 'appid',
+      alarmcontent: 'alarmcontent',
+      description: 'description',
+      errortype: 'errortype',
+      timestamp: Time.now.to_i.to_s
+    }
+    result = WechatPay::Notify::Warning.verify?(app_signature, params)
+    result.must_equal(false)
+  end
 end
