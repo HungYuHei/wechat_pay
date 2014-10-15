@@ -86,7 +86,7 @@ WechatPay::App.payment('ACCESS_TOKEN', params)
 ###### generate url
 
 ```ruby
-WechatPay::Native.payment('OUT_TRADE_NO')
+WechatPay::Native.payment_url('OUT_TRADE_NO')
 # => "weixin://wxpay/bizpayurl?sign=SIGN&productid=..."
 ```
 

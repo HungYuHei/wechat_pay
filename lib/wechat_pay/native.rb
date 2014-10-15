@@ -1,6 +1,6 @@
 module WechatPay
   module Native
-    def self.payment(product_id)
+    def self.payment_url(product_id)
       attrs = {
         appid:     WechatPay.app_id,
         appkey:    WechatPay.pay_sign_key,

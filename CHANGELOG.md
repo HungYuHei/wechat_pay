@@ -4,7 +4,7 @@
 
 ### Add
 
-* `WechatPay::Native.payment`
+* `WechatPay::Native.payment_url`
 * `WechatPay::Native.verify?`
 * `WechatPay::Native.package`
 * `WechatPay::Notify::Warning.verify?`
