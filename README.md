@@ -1,6 +1,9 @@
 # WechatPay
 
-微信支付: https://open.weixin.qq.com/cgi-bin/frame?t=home/pay_tmpl&lang=zh_CN  
+**Attention**: this gem is developed under v2.x API, if you using v3.X API, you probably need [wx_pay gem](https://github.com/jasl/wx_pay)
+
+微信支付:   
+https://open.weixin.qq.com/cgi-bin/frame?t=home/pay_tmpl&lang=zh_CN  
 [Official document](https://mp.weixin.qq.com/paymch/readtemplate?t=mp/business/course2_tmpl&lang=zh_CN&token=1666369998#4)
 
 It contains:
